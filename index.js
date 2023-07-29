@@ -19,24 +19,24 @@ const start = async() => {
 		logger: level,
 		printQRInTerminal: true,
 		auth: {
-      creds: state.creds,
-      keys: makeCacheableSignalKeyStore(state.keys, level),
-    }
-  })
+			creds: state.creds,
+			keys: makeCacheableSignalKeyStore(state.keys, level),
+		}
+	})
 	
 	sock.ev.on('connection.update', (update) => {
 		const { connection, lastDisconnect } = update
-		if(connection === 'close') {
-			if (lastDisconnect.error.output.statusCode !== 401) {
-        start()
-      } else {
-        exec('rm -rf session')
-          console.error('connection closed')
-            start()
-      }
-		} else if(connection === 'open') {
-			console.log('opened connection')
-		}
+			if(connection === 'close') {
+				if (lastDisconnect.error.output.statusCode !== 401) {
+					start()
+				} else {
+					exec('rm -rf session')
+					console.error('connection closed')
+					start()
+				}
+			} else if(connection === 'open') {
+				console.log('opened connection')
+			}
 	})
 	
 	sock.ev.on('creds.update', saveCreds)
